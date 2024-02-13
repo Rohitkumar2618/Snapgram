@@ -27,7 +27,6 @@ import {
     deleteSavedPost,
 } from "@/lib/appwrite/api";
 import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
-
 // ============================================================
 // AUTH QUERIES
 // ============================================================
@@ -69,8 +68,10 @@ export const useGetPosts = () => {
             const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
             return lastId;
         },
+        initialPageParam: null, // Add initialPageParam property
     });
 };
+
 
 export const useSearchPosts = (searchTerm: string) => {
     return useQuery({

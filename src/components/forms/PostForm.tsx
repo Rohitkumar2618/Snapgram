@@ -21,6 +21,8 @@ import { useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutati
 
 import Loader
     from "../ui/shared/Loader"
+
+    
 type PostFormProps = {
     post?: Models.Document;
     action: "Create" | "Update";
@@ -30,10 +32,10 @@ const PostForm = ({ post, action }: PostFormProps) => {
 
 
     // Query
-    const { mutateAsync: createPost, isLoading: isLoadingCreate } =
+    const { mutateAsync: createPost, isPending: isLoadingCreate } =
         useCreatePost();
 
-    const { mutateAsync: updatePost, isLoading: isLoadingUpdate } =
+    const { mutateAsync: updatePost, isPending: isLoadingUpdate } =
         useUpdatePost();
 
 

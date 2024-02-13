@@ -280,20 +280,20 @@ export async function updatePost(post: IUpdatePost) {
         if (hasFileToUpdate) {
             // Upload new file to appwrite storage
             const uploadedFile = await uploadFile(post.file[0]);
-            if (!uploadedFile) throw Error;
+            if (!uploadedFile) throw new Error('Failed to upload file');
 
             // Get new file url
             const fileUrl = getFilePreview(uploadedFile.$id);
             if (!fileUrl) {
                 await deleteFile(uploadedFile.$id);
-                throw Error;
+                throw new Error('Failed to get file URL');
             }
 
             image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
         }
 
-        // Convert tags into array
-        const tags = post.tags?.replace(/ /g, "").split(",") || [];
+        // Ensure that tags is a valid string and no longer than 2200 characters
+        const tags = typeof post.tags === 'string' ? post.tags.substr(0, 2200) : '';
 
         //  Update post
         const updatedPost = await databases.updateDocument(
@@ -317,7 +317,7 @@ export async function updatePost(post: IUpdatePost) {
             }
 
             // If no new file uploaded, just throw error
-            throw Error;
+            throw new Error('Failed to update post');
         }
 
         // Safely delete old file after successful update
@@ -328,6 +328,7 @@ export async function updatePost(post: IUpdatePost) {
         return updatedPost;
     } catch (error) {
         console.log(error);
+        throw error; // Re-throw the error to propagate it to the caller
     }
 }
 
